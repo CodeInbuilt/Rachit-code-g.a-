@@ -1,0 +1,93 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set()
+from sklearn.cluster import KMeans
+
+df = pd.read_csv('Mall_Customers.csv')
+df.head()
+
+df.tail()
+gender = df['Genre']
+age = df['Age']
+income = df['Annual Income (k$)']
+spent = df['Spending Score (1-100)']
+df.describe()
+fig = plt.figure(figsize=(8, 6))
+fig.suptitle('Customer Data before Segmented', fontsize=14)
+ax = fig.add_subplot(111, projection='3d')
+
+ax.set_xlabel('Age')
+ax.set_ylabel('Annual Income (k$)')
+ax.set_zlabel('Spending Score (1-100)')
+
+# Data for three-dimensional scattered points
+ax.scatter(age, income, spent, cmap='blue');
+
+
+
+
+# For each k value, we will initialise k-means
+# and use the inertia attribute to identify
+# the sum of squared distances of samples to the nearest cluster centre
+
+x=df.drop(['Genre','CustomerID'], axis=1)
+from sklearn.cluster import KMeans
+iner=[]
+
+wcss=[]
+for i in range(1,11):
+    kmeans=KMeans(i)
+    kmeans.fit(x)
+    wcss.append(kmeans.inertia_)
+
+#print (wcss)
+
+plt.plot(range(1,11),wcss)
+plt.title('Elbow Method to find best ')
+plt.xlabel('number of cluster')
+plt.ylabel('wcss')
+plt.show()
+
+
+kmeans = KMeans(6)
+kmeans.fit(x)
+x['c_pred']=kmeans.fit_predict(x)
+x
+np.unique(x['c_pred'])
+
+fig = plt.figure(figsize=(8, 6))
+fig.suptitle('Customer Data After Segmented', fontsize=14)
+ax = fig.add_subplot(111, projection='3d')
+
+ax.set_xlabel('Age')
+ax.set_ylabel('Annual Income (k$)')
+ax.set_zlabel('Spending Score (1-100)')
+
+# Data for three-dimensional scattered points
+ax.scatter(age, income, spent, c=x['c_pred'], cmap='rainbow');
+
+# import plotly
+
+colors = ['red' if i == 0 else 'green' if i == 1 else 'blue' if i == 2 else 'pink' if i == 3 else 'black' if i == 4 else 'orange' for i in list(x['c_pred'])]
+markers = ['x' if q == 'Male' else 'o' for q in list(df['Genre'])]
+
+
+fig = plt.figure(figsize=(8, 6))
+t = fig.suptitle('Mall Customer Segmentation Final', fontsize=14)
+ax = fig.add_subplot(111, projection='3d')
+
+xs = list(df['Age'])
+ys = list(df['Annual Income (k$)'])
+zs = list(df['Spending Score (1-100)'])
+
+data_points = [(x, y, z) for x, y, z in zip(xs, ys, zs)]
+
+for data, color, mark in zip(data_points, colors, markers):
+    x, y, z = data
+    ax.scatter(x, y, z, c=color, edgecolors='gray', marker=mark)
+
+ax.set_xlabel('Age')
+ax.set_ylabel('Annual Income (k$)')
+ax.set_zlabel('Spending Score (1-100)')
