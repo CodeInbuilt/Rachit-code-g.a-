@@ -1,0 +1,478 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace HospitalManagementSystem
+{
+    // ------------ MODELS ------------
+
+    public class Patient
+    {
+        private static int _idCounter = 1;
+
+        public int PatientId { get; private set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Gender { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+
+        public Patient(string name, int age, string gender, string phone, string address)
+        {
+            PatientId = _idCounter++;
+            Name = name;
+            Age = age;
+            Gender = gender;
+            Phone = phone;
+            Address = address;
+        }
+
+        public override string ToString()
+        {
+            return $"[Patient #{PatientId}] {Name}, Age: {Age}, Gender: {Gender}, Phone: {Phone}, Address: {Address}";
+        }
+    }
+
+    public class Doctor
+    {
+        private static int _idCounter = 1;
+
+        public int DoctorId { get; private set; }
+        public string Name { get; set; }
+        public string Specialization { get; set; }
+        public string Phone { get; set; }
+
+        public Doctor(string name, string specialization, string phone)
+        {
+            DoctorId = _idCounter++;
+            Name = name;
+            Specialization = specialization;
+            Phone = phone;
+        }
+
+        public override string ToString()
+        {
+            return $"[Doctor #{DoctorId}] Dr. {Name}, Specialization: {Specialization}, Phone: {Phone}";
+        }
+    }
+
+    public class Appointment
+    {
+        private static int _idCounter = 1;
+
+        public int AppointmentId { get; private set; }
+        public int PatientId { get; set; }
+        public int DoctorId { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+
+        public Appointment(int patientId, int doctorId, DateTime date, string description)
+        {
+            AppointmentId = _idCounter++;
+            PatientId = patientId;
+            DoctorId = doctorId;
+            Date = date;
+            Description = description;
+        }
+
+        public override string ToString()
+        {
+            return $"[Appointment #{AppointmentId}] Patient ID: {PatientId}, Doctor ID: {DoctorId}, " +
+                   $"Date: {Date:dd-MM-yyyy HH:mm}, Note: {Description}";
+        }
+    }
+
+    // ------------ HOSPITAL MANAGER (LOGIC) ------------
+
+    public class HospitalManager
+    {
+        public List<Patient> Patients { get; private set; }
+        public List<Doctor> Doctors { get; private set; }
+        public List<Appointment> Appointments { get; private set; }
+
+        public HospitalManager()
+        {
+            Patients = new List<Patient>();
+            Doctors = new List<Doctor>();
+            Appointments = new List<Appointment>();
+
+            // Seed with some initial data (for demo)
+            SeedSampleData();
+        }
+
+        private void SeedSampleData()
+        {
+            Doctors.Add(new Doctor("Amit Verma", "Cardiologist", "9999999991"));
+            Doctors.Add(new Doctor("Neha Sharma", "Pediatrician", "9999999992"));
+            Doctors.Add(new Doctor("Rahul Singh", "Orthopedic", "9999999993"));
+
+            Patients.Add(new Patient("Rohan Gupta", 30, "Male", "8888888881", "Indore"));
+            Patients.Add(new Patient("Priya Patel", 25, "Female", "8888888882", "Bhopal"));
+        }
+
+        // ------ PATIENT METHODS ------
+
+        public Patient AddPatient(string name, int age, string gender, string phone, string address)
+        {
+            var p = new Patient(name, age, gender, phone, address);
+            Patients.Add(p);
+            return p;
+        }
+
+        public Patient GetPatientById(int id)
+        {
+            return Patients.FirstOrDefault(p => p.PatientId == id);
+        }
+
+        // ------ DOCTOR METHODS ------
+
+        public Doctor AddDoctor(string name, string specialization, string phone)
+        {
+            var d = new Doctor(name, specialization, phone);
+            Doctors.Add(d);
+            return d;
+        }
+
+        public Doctor GetDoctorById(int id)
+        {
+            return Doctors.FirstOrDefault(d => d.DoctorId == id);
+        }
+
+        // ------ APPOINTMENT METHODS ------
+
+        public Appointment ScheduleAppointment(int patientId, int doctorId, DateTime date, string description)
+        {
+            var patient = GetPatientById(patientId);
+            var doctor = GetDoctorById(doctorId);
+
+            if (patient == null)
+            {
+                throw new Exception("Invalid Patient ID.");
+            }
+
+            if (doctor == null)
+            {
+                throw new Exception("Invalid Doctor ID.");
+            }
+
+            var appt = new Appointment(patientId, doctorId, date, description);
+            Appointments.Add(appt);
+            return appt;
+        }
+
+        public List<Appointment> GetAppointmentsForPatient(int patientId)
+        {
+            return Appointments.Where(a => a.PatientId == patientId).ToList();
+        }
+
+        public List<Appointment> GetAppointmentsForDoctor(int doctorId)
+        {
+            return Appointments.Where(a => a.DoctorId == doctorId).ToList();
+        }
+    }
+
+    // ------------ MAIN PROGRAM (UI) ------------
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            HospitalManager hm = new HospitalManager();
+            bool exit = false;
+
+            while (!exit)
+            {
+                Console.Clear();
+                Console.WriteLine("=======================================");
+                Console.WriteLine("      HOSPITAL MANAGEMENT SYSTEM      ");
+                Console.WriteLine("=======================================");
+                Console.WriteLine("1. Add Patient");
+                Console.WriteLine("2. View All Patients");
+                Console.WriteLine("3. Add Doctor");
+                Console.WriteLine("4. View All Doctors");
+                Console.WriteLine("5. Schedule Appointment");
+                Console.WriteLine("6. View All Appointments");
+                Console.WriteLine("7. View Appointments for a Patient");
+                Console.WriteLine("8. View Appointments for a Doctor");
+                Console.WriteLine("0. Exit");
+                Console.WriteLine("---------------------------------------");
+                Console.Write("Enter your choice: ");
+
+                int choice = ReadIntFromConsole();
+
+                try
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            AddPatientUI(hm);
+                            break;
+                        case 2:
+                            ViewAllPatientsUI(hm);
+                            break;
+                        case 3:
+                            AddDoctorUI(hm);
+                            break;
+                        case 4:
+                            ViewAllDoctorsUI(hm);
+                            break;
+                        case 5:
+                            ScheduleAppointmentUI(hm);
+                            break;
+                        case 6:
+                            ViewAllAppointmentsUI(hm);
+                            break;
+                        case 7:
+                            ViewAppointmentsForPatientUI(hm);
+                            break;
+                        case 8:
+                            ViewAppointmentsForDoctorUI(hm);
+                            break;
+                        case 0:
+                            exit = true;
+                            Console.WriteLine("Exiting... Goodbye!");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice. Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        // ------------ UI HELPERS ------------
+
+        static int ReadIntFromConsole()
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int value))
+                {
+                    return value;
+                }
+                Console.Write("Invalid number. Please enter again: ");
+            }
+        }
+
+        static DateTime ReadDateTimeFromConsole(string prompt)
+        {
+            Console.Write(prompt);
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (DateTime.TryParse(input, out DateTime dt))
+                {
+                    return dt;
+                }
+                Console.Write("Invalid date/time. Please enter again (e.g. 25-12-2025 14:30): ");
+            }
+        }
+
+        static void AddPatientUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- Add New Patient -----");
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Age: ");
+            int age = ReadIntFromConsole();
+
+            Console.Write("Gender (Male/Female/Other): ");
+            string gender = Console.ReadLine();
+
+            Console.Write("Phone: ");
+            string phone = Console.ReadLine();
+
+            Console.Write("Address: ");
+            string address = Console.ReadLine();
+
+            var patient = hm.AddPatient(name, age, gender, phone, address);
+            Console.WriteLine();
+            Console.WriteLine("Patient added successfully!");
+            Console.WriteLine(patient.ToString());
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void ViewAllPatientsUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- All Patients -----");
+            if (!hm.Patients.Any())
+            {
+                Console.WriteLine("No patients found.");
+            }
+            else
+            {
+                foreach (var p in hm.Patients)
+                {
+                    Console.WriteLine(p.ToString());
+                }
+            }
+            Console.WriteLine("------------------------");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void AddDoctorUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- Add New Doctor -----");
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Specialization: ");
+            string specialization = Console.ReadLine();
+
+            Console.Write("Phone: ");
+            string phone = Console.ReadLine();
+
+            var doctor = hm.AddDoctor(name, specialization, phone);
+            Console.WriteLine();
+            Console.WriteLine("Doctor added successfully!");
+            Console.WriteLine(doctor.ToString());
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void ViewAllDoctorsUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- All Doctors -----");
+            if (!hm.Doctors.Any())
+            {
+                Console.WriteLine("No doctors found.");
+            }
+            else
+            {
+                foreach (var d in hm.Doctors)
+                {
+                    Console.WriteLine(d.ToString());
+                }
+            }
+            Console.WriteLine("------------------------");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void ScheduleAppointmentUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- Schedule Appointment -----");
+            Console.Write("Enter Patient ID: ");
+            int patientId = ReadIntFromConsole();
+
+            Console.Write("Enter Doctor ID: ");
+            int doctorId = ReadIntFromConsole();
+
+            var date = ReadDateTimeFromConsole("Enter Date & Time (e.g. 25-12-2025 14:30): ");
+
+            Console.Write("Enter Description / Problem: ");
+            string description = Console.ReadLine();
+
+            var appt = hm.ScheduleAppointment(patientId, doctorId, date, description);
+            Console.WriteLine();
+            Console.WriteLine("Appointment scheduled successfully!");
+            Console.WriteLine(appt.ToString());
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void ViewAllAppointmentsUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- All Appointments -----");
+            if (!hm.Appointments.Any())
+            {
+                Console.WriteLine("No appointments found.");
+            }
+            else
+            {
+                foreach (var a in hm.Appointments)
+                {
+                    Console.WriteLine(a.ToString());
+                }
+            }
+            Console.WriteLine("----------------------------");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void ViewAppointmentsForPatientUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- Appointments For Patient -----");
+            Console.Write("Enter Patient ID: ");
+            int patientId = ReadIntFromConsole();
+
+            var patient = hm.GetPatientById(patientId);
+            if (patient == null)
+            {
+                Console.WriteLine("No such patient found.");
+            }
+            else
+            {
+                Console.WriteLine("Patient: " + patient.ToString());
+                var appts = hm.GetAppointmentsForPatient(patientId);
+                if (!appts.Any())
+                {
+                    Console.WriteLine("No appointments for this patient.");
+                }
+                else
+                {
+                    Console.WriteLine("Appointments:");
+                    foreach (var a in appts)
+                    {
+                        Console.WriteLine(a.ToString());
+                    }
+                }
+            }
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void ViewAppointmentsForDoctorUI(HospitalManager hm)
+        {
+            Console.Clear();
+            Console.WriteLine("----- Appointments For Doctor -----");
+            Console.Write("Enter Doctor ID: ");
+            int doctorId = ReadIntFromConsole();
+
+            var doctor = hm.GetDoctorById(doctorId);
+            if (doctor == null)
+            {
+                Console.WriteLine("No such doctor found.");
+            }
+            else
+            {
+                Console.WriteLine("Doctor: " + doctor.ToString());
+                var appts = hm.GetAppointmentsForDoctor(doctorId);
+                if (!appts.Any())
+                {
+                    Console.WriteLine("No appointments for this doctor.");
+                }
+                else
+                {
+                    Console.WriteLine("Appointments:");
+                    foreach (var a in appts)
+                    {
+                        Console.WriteLine(a.ToString());
+                    }
+                }
+            }
+            Console.WriteLine("-----------------------------------");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+    }
+}
