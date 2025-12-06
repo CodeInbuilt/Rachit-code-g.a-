@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+
+class ReportCard {
+private:
+    string name;
+    int roll;
+    float marks[5];
+    float total = 0, percentage = 0;
+    char grade;
+
+public:
+    void inputDetails() {
+        cout << "Enter Student Name: ";
+        cin >> name;
+
+        cout << "Enter Roll Number: ";
+        cin >> roll;
+
+        cout << "\nEnter marks for 5 subjects (out of 100):\n";
+        for (int i = 0; i < 5; i++) {
+            cout << "Subject " << i + 1 << ": ";
+            cin >> marks[i];
+            total += marks[i];
+        }
+    }
+
+    void calculate() {
+        percentage = (total / 500) * 100;
+
+        if (percentage >= 90) grade = 'A';
+        else if (percentage >= 75) grade = 'B';
+        else if (percentage >= 60) grade = 'C';
+        else if (percentage >= 40) grade = 'D';
+        else grade = 'F';
+    }
+
+    void displayReport() {
+        cout << "\n------- STUDENT REPORT CARD -------\n";
+        cout << "Name: " << name << endl;
+        cout << "Roll Number: " << roll << endl;
+        cout << "-----------------------------------\n";
+        
+        cout << "Marks:\n";
+        for (int i = 0; i < 5; i++) {
+            cout << "Subject " << i + 1 << ": " << marks[i] << endl;
+        }
+
+        cout << "-----------------------------------\n";
+        cout << "Total Marks: " << total << "/500\n";
+        cout << "Percentage : " << percentage << "%\n";
+        cout << "Grade      : " << grade << endl;
+        cout << "-----------------------------------\n";
+    }
+};
+
+int main() {
+    ReportCard r;
+    r.inputDetails();
+    r.calculate();
+    r.displayReport();
+
+    return 0;
+}
