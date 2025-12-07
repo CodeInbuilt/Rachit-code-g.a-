@@ -1,0 +1,85 @@
+#include <iostream>
+using namespace std;
+
+class Book {
+public:
+    int id;
+    string title;
+    string author;
+
+    void input() {
+        cout << "Enter Book ID: ";
+        cin >> id;
+        cout << "Enter Book Title: ";
+        cin.ignore();
+        getline(cin, title);
+        cout << "Enter Book Author: ";
+        getline(cin, author);
+    }
+
+    void show() {
+        cout << "Book ID: " << id << endl;
+        cout << "Title  : " << title << endl;
+        cout << "Author : " << author << endl;
+        cout << "--------------------------\n";
+    }
+};
+
+int main() {
+    Book library[100];
+    int choice, count = 0;
+
+    while (true) {
+        cout << "\n===== LIBRARY MANAGEMENT =====\n";
+        cout << "1. Add Book\n";
+        cout << "2. Search Book by ID\n";
+        cout << "3. Display All Books\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            cout << "\nEnter Book Details:\n";
+            library[count].input();
+            count++;
+            cout << "Book Added Successfully!\n";
+        }
+        else if (choice == 2) {
+            int searchID;
+            bool found = false;
+
+            cout << "Enter Book ID to Search: ";
+            cin >> searchID;
+
+            for (int i = 0; i < count; i++) {
+                if (library[i].id == searchID) {
+                    cout << "\nBook Found:\n";
+                    library[i].show();
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                cout << "Book Not Found!\n";
+        }
+        else if (choice == 3) {
+            cout << "\n--- All Books in Library ---\n";
+            if (count == 0) {
+                cout << "No books available.\n";
+            } else {
+                for (int i = 0; i < count; i++) {
+                    library[i].show();
+                }
+            }
+        }
+        else if (choice == 4) {
+            cout << "Exiting... Thank you!\n";
+            break;
+        }
+        else {
+            cout << "Invalid choice! Try again.\n";
+        }
+    }
+
+    return 0;
+}
