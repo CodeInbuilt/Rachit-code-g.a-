@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int choice;
+    float temp, result;
+
+    while (true) {
+        cout << "\n===== TEMPERATURE CONVERTER =====\n";
+        cout << "1. Celsius to Fahrenheit\n";
+        cout << "2. Fahrenheit to Celsius\n";
+        cout << "3. Celsius to Kelvin\n";
+        cout << "4. Kelvin to Celsius\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            cout << "Enter temperature in Celsius: ";
+            cin >> temp;
+            result = (temp * 9/5) + 32;
+            cout << "Fahrenheit: " << result << " °F\n";
+        }
+        else if (choice == 2) {
+            cout << "Enter temperature in Fahrenheit: ";
+            cin >> temp;
+            result = (temp - 32) * 5/9;
+            cout << "Celsius: " << result << " °C\n";
+        }
+        else if (choice == 3) {
+            cout << "Enter temperature in Celsius: ";
+            cin >> temp;
+            result = temp + 273.15;
+            cout << "Kelvin: " << result << " K\n";
+        }
+        else if (choice == 4) {
+            cout << "Enter temperature in Kelvin: ";
+            cin >> temp;
+            result = temp - 273.15;
+            cout << "Celsius: " << result << " °C\n";
+        }
+        else if (choice == 5) {
+            cout << "Exiting... Thank you!\n";
+            break;
+        }
+        else {
+            cout << "Invalid choice! Try again.\n";
+        }
+    }
+
+    return 0;
+}
