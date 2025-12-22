@@ -1,0 +1,157 @@
+Basic Inventory System
+Objective:
+• Implement a basic inventory system where items can be collected and managed.
+Description: This script manages the player’s inventory, allowing item collection and
+display.
+here step by step by step:-
+🔹 Step 1: Create a New Unity Project
+
+Open Unity Hub
+
+Click New Project
+
+Select 2D (or 3D) template
+
+Name it: BasicInventorySystem
+
+Click Create
+
+🔹 Step 2: Create UI Text for Inventory Display
+(For Unity 2021+ using Canvas)
+
+In Hierarchy
+
+Right-click → UI → Canvas
+
+Right-click on Canvas
+
+UI → Text – TextMeshPro
+
+If asked, click Import TMP Essentials
+
+Rename
+
+Rename Text object to InventoryText
+
+Set Text Properties
+
+Text: Inventory:
+
+Font Size: 24–30
+
+Alignment: Top Left
+
+Position it on screen using Rect Transform
+
+🔹 Step 3: Create Inventory Script
+
+In Project Window
+
+Right-click → Create → C# Script
+
+Name it: InventorySystem
+
+Double-click and paste this code 👇
+
+using UnityEngine;
+using TMPro;
+using System.Collections.Generic;
+
+public class InventorySystem : MonoBehaviour
+{
+    public TextMeshProUGUI inventoryText;
+    private List<string> inventory = new List<string>();
+
+    void Start()
+    {
+        UpdateInventoryUI();
+    }
+
+    void UpdateInventoryUI()
+    {
+        inventoryText.text = "Inventory: " + string.Join(", ", inventory);
+    }
+
+    public void AddItem(string item)
+    {
+        inventory.Add(item);
+        UpdateInventoryUI();
+    }
+}
+
+
+✅ Important Changes
+
+Used TextMeshProUGUI
+
+Added System.Collections.Generic
+
+🔹 Step 4: Attach Script to GameObject
+
+In Hierarchy
+
+Right-click → Create Empty
+
+Rename it InventoryManager
+
+Drag InventorySystem.cs onto InventoryManager
+
+🔹 Step 5: Link UI Text to Script
+
+Click InventoryManager
+
+In Inspector
+
+Drag InventoryText from Hierarchy into:
+👉 Inventory Text field
+
+🔹 Step 6: Add Item Using Button (Test Method)
+Create Button
+
+Right-click Canvas
+
+UI → Button – TextMeshPro
+
+Rename Button: AddItemButton
+
+Change Button text to: Add Item
+
+Button Click Setup
+
+Select AddItemButton
+
+In Inspector → OnClick()
+
+Click +
+
+Drag InventoryManager into empty field
+
+Choose:
+
+InventorySystem → AddItem(string)
+
+
+Type item name:
+
+Sword
+
+🔹 Step 7: Run the Scene ▶️
+
+Click Play
+
+Press Add Item button
+
+Output:
+
+Inventory: Sword
+
+
+Click again:
+
+Inventory: Sword, Sword
+
+
+🎉 Inventory System Working Successfully!
+
+✅ Output Example
+Inventory: Sword, Shield, Potion
