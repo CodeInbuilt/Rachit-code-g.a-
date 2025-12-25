@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP Store - Premium Laptops</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #9333ea;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(to right, #9333ea, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(to right, #9333ea, #3b82f6);
+            color: white;
+        }
+
+        .toggle-btn:not(.active) {
+            background: #1f2937;
+            color: #9ca3af;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title h2 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .page-title p {
+            color: #c084fc;
+            font-size: 20px;
+        }
+
+        .laptop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .laptop-card {
+            background: rgba(31, 41, 55, 0.5);
+            border: 2px solid #9333ea;
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .laptop-card:hover {
+            transform: translateY(-10px);
+            border-color: #c084fc;
+            box-shadow: 0 20px 40px rgba(147, 51, 234, 0.3);
+        }
+
+        .laptop-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .laptop-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .laptop-specs {
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .price-section {
+            margin-bottom: 20px;
+        }
+
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .original-price {
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+
+        .discount-badge {
+            background: #dc2626;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .final-price {
+            font-size: 32px;
+            font-weight: bold;
+            color: #22c55e;
+        }
+
+        .savings {
+            color: #c084fc;
+            font-size: 14px;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #9333ea, #3b82f6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #1f2937;
+            border: 2px solid #9333ea;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .selected-laptop-info {
+            background: #374151;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-method {
+            padding: 20px;
+            background: #374151;
+            border: 2px solid #4b5563;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: #9333ea;
+        }
+
+        .payment-method.selected {
+            background: rgba(147, 51, 234, 0.3);
+            border-color: #9333ea;
+        }
+
+        .payment-method-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .payment-form {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .payment-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #9333ea, #3b82f6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pay-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .employee-view {
+            display: none;
+        }
+
+        .employee-view.active {
+            display: block;
+        }
+
+        .customer-view.active {
+            display: block;
+        }
+
+        .customer-view {
+            display: none;
+        }
+
+        .transaction-table {
+            background: rgba(31, 41, 55, 0.5);
+            border: 2px solid #3b82f6;
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid #4b5563;
+            color: #d1d5db;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #374151;
+        }
+
+        tr:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .status-badge {
+            background: #22c55e;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .cash-notice {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid #fbbf24;
+            padding: 15px;
+            border-radius: 8px;
+            color: #fbbf24;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/HP_logo_2012.svg/200px-HP_logo_2012.svg.png" alt="HP Logo">
+                <h1>HP Store</h1>
+            </div>
+            <div class="view-toggle">
+                <button class="toggle-btn active" onclick="switchView('customer')">👤 Customer</button>
+                <button class="toggle-btn" onclick="switchView('employee')">📋 Employee</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Customer View -->
+        <div class="customer-view active">
+            <div class="page-title">
+                <h2>Premium HP Laptops</h2>
+                <p>Exclusive Discounts Available</p>
+            </div>
+
+            <div class="laptop-grid">
+                <div class="laptop-card">
+                    <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=300&fit=crop" alt="HP Pavilion 15" class="laptop-image">
+                    <div class="laptop-name">HP Pavilion 15</div>
+                    <div class="laptop-specs">i5, 8GB RAM, 512GB SSD</div>
+                    <div class="price-section">
+                        <div class="price-header">
+                            <span class="original-price">₹54,999</span>
+                            <span class="discount-badge">15% OFF</span>
+                        </div>
+                        <div class="final-price">₹46,749</div>
+                        <div class="savings">Save ₹8,250</div>
+                    </div>
+                    <button class="buy-btn" onclick="openPayment('HP Pavilion 15', 54999, 15, 'i5, 8GB RAM, 512GB SSD')">🛒 Buy Now</button>
+                </div>
+
+                <div class="laptop-card">
+                    <img src="hplaptop.png" alt="HP Envy x360" class="laptop-image">
+                    <div class="laptop-name">HP Envy x360</div>
+                    <div class="laptop-specs">i7, 16GB RAM, 1TB SSD</div>
+                    <div class="price-section">
+                        <div class="price-header">
+                            <span class="original-price">₹79,999</span>
+                            <span class="discount-badge">20% OFF</span>
+                        </div>
+                        <div class="final-price">₹63,999</div>
+                        <div class="savings">Save ₹16,000</div>
+                    </div>
+                    <button class="buy-btn" onclick="openPayment('HP Envy x360', 79999, 20, 'i7, 16GB RAM, 1TB SSD')">🛒 Buy Now</button>
+                </div>
+
+                <div class="laptop-card">
+                    <img src="demon16rtx60.png" alt="HP Omen 16" class="laptop-image">
+                    <div class="laptop-name">HP Omen 16</div>
+                    <div class="laptop-specs">AMD Ryzen 7 7840Hs• NVIDIA GeForce 8 GB RTX 4060 • 16GB RAM • 1TB SSD</div>
+                    <div class="price-section">
+                        <div class="price-header">
+                            <span class="original-price">₹1,24,999</span>
+                            <span class="discount-badge">10% OFF</span>
+                        </div>
+                        <div class="final-price">₹1,05,995</div>
+                        <div class="savings">Save ₹12,500</div>
+                    </div>
+                    <button class="buy-btn" onclick="openPayment('AMD Ryzen 7 7840Hs• NVIDIA GeForce 8 GB RTX 4060 • 16GB RAM • 1TB SSD')">🛒 Buy Now</button>
+                </div>
+
+                <div class="laptop-card">
+                    <img src="xspectre.jpeg" alt="HP Spectre x360" class="laptop-image">
+                    <div class="laptop-name">HP Spectre x360</div>
+                    <div class="laptop-specs">i7, 16GB RAM, 1TB SSD</div>
+                    <div class="price-section">
+                        <div class="price-header">
+                            <span class="original-price">₹1,39,999</span>
+                            <span class="discount-badge">12% OFF</span>
+                        </div>
+                        <div class="final-price">₹1,23,199</div>
+                        <div class="savings">Save ₹16,800</div>
+                    </div>
+                    <button class="buy-btn" onclick="openPayment('HP Spectre x360', 139999, 12, 'i7, 16GB RAM, 1TB SSD')">🛒 Buy Now</button>
+                </div>
+
+                <div class="laptop-card">
+                    <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=300&fit=crop" alt="HP ProBook 450" class="laptop-image">
+                    <div class="laptop-name">HP ProBook 450</div>
+                    <div class="laptop-specs">i5, 8GB RAM, 256GB SSD</div>
+                    <div class="price-section">
+                        <div class="price-header">
+                            <span class="original-price">₹45,999</span>
+                            <span class="discount-badge">18% OFF</span>
+                        </div>
+                        <div class="final-price">₹37,719</div>
+                        <div class="savings">Save ₹8,280</div>
+                    </div>
+                    <button class="buy-btn" onclick="openPayment('HP ProBook 450', 45999, 18, 'i5, 8GB RAM, 256GB SSD')">🛒 Buy Now</button>
+                </div>
+
+                <div class="laptop-card">
+                    <img src="sliver.png" alt="HP Victus 15" class="laptop-image">
+                    <div class="laptop-name">HP Victus 15</div>
+                    <div class="laptop-specs">Intel Core i5-12450H • NVIDIA RTX™ 5050 8 GB • 24 GB RAM •1TB SSD</div>
+                    <div class="price-section">
+                        <div class="price-header">
+                            <span class="original-price">₹1,24,318</span>
+                            <span class="discount-badge">15% OFF</span>
+                        </div>
+                        <div class="final-price">₹105,499</div>
+                        <div class="savings">Save ₹9,750</div>
+                    </div>
+                    <button class="buy-btn" onclick="openPayment('HP Victus 15', 64999, 15, 'Intel Core i5-12450H • NVIDIA RTX™ 5050 8 GB • 24 GB RAM •1TB SSD')">🛒 Buy Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employee View -->
+        <div class="employee-view">
+            <div class="transaction-table">
+                <h2 style="margin-bottom: 30px; font-size: 32px;">Transaction Records</h2>
+                <div id="transactionContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p style="font-size: 20px;">No transactions yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Complete Payment</h2>
+                <button class="close-btn" onclick="closePayment()">×</button>
+            </div>
+
+            <div class="selected-laptop-info" id="selectedLaptopInfo"></div>
+
+            <h3 style="margin-bottom: 20px;">Select Payment Method</h3>
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPayment('debit')">
+                    <div class="payment-method-icon">💳</div>
+                    <div>Debit Card</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('credit')">
+                    <div class="payment-method-icon">💳</div>
+                    <div>Credit Card</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('upi')">
+                    <div class="payment-method-icon">📱</div>
+                    <div>UPI</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('netbanking')">
+                    <div class="payment-method-icon">🏦</div>
+                    <div>Net Banking</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('cash')">
+                    <div class="payment-method-icon">💵</div>
+                    <div>Cash</div>
+                </div>
+            </div>
+
+            <div id="cardForm" class="payment-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Card Number" maxlength="16">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Cardholder Name">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="CVV" maxlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <div id="upiForm" class="payment-form">
+                <div class="form-group">
+                    <input type="text" placeholder="UPI ID (example@upi)">
+                </div>
+            </div>
+
+            <div id="netbankingForm" class="payment-form">
+                <div class="form-group">
+                    <select>
+                        <option value="">Select Bank</option>
+                        <option value="SBI">State Bank of India</option>
+                        <option value="HDFC">HDFC Bank</option>
+                        <option value="ICICI">ICICI Bank</option>
+                        <option value="Axis">Axis Bank</option>
+                        <option value="PNB">Punjab National Bank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Account Number">
+                </div>
+            </div>
+
+            <div id="cashForm" class="payment-form">
+                <div class="cash-notice">
+                    Cash payment will be collected at the time of delivery.
+                </div>
+            </div>
+
+            <button class="pay-btn" onclick="processPayment()">Pay Now</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPayment = null;
+        let selectedPaymentMethod = null;
+        let transactions = [];
+
+        function switchView(view) {
+            const buttons = document.querySelectorAll('.toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (view === 'customer') {
+                document.querySelector('.customer-view').classList.add('active');
+                document.querySelector('.employee-view').classList.remove('active');
+            } else {
+                document.querySelector('.customer-view').classList.remove('active');
+                document.querySelector('.employee-view').classList.add('active');
+            }
+        }
+
+        function openPayment(name, price, discount, specs) {
+            const finalPrice = price - (price * discount / 100);
+            const savings = price * discount / 100;
+            
+            currentPayment = { name, price, discount, finalPrice, specs };
+            
+            const info = `
+                <h3 style="font-size: 22px; margin-bottom: 10px;">${name}</h3>
+                <p style="color: #9ca3af; margin-bottom: 20px;">${specs}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <p style="color: #9ca3af; text-decoration: line-through;">₹${price.toLocaleString()}</p>
+                        <p style="font-size: 32px; font-weight: bold; color: #22c55e;">₹${finalPrice.toLocaleString()}</p>
+                    </div>
+                    <div class="discount-badge">${discount}% OFF</div>
+                </div>
+            `;
+            
+            document.getElementById('selectedLaptopInfo').innerHTML = info;
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closePayment() {
+            document.getElementById('paymentModal').classList.remove('active');
+            selectedPaymentMethod = null;
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.payment-form').forEach(el => el.classList.remove('active'));
+        }
+
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            document.querySelectorAll('.payment-form').forEach(el => el.classList.remove('active'));
+            
+            if (method === 'debit' || method === 'credit') {
+                document.getElementById('cardForm').classList.add('active');
+            } else if (method === 'upi') {
+                document.getElementById('upiForm').classList.add('active');
+            } else if (method === 'netbanking') {
+                document.getElementById('netbankingForm').classList.add('active');
+            } else if (method === 'cash') {
+                document.getElementById('cashForm').classList.add('active');
+            }
+        }
+
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            const transaction = {
+                id: Date.now(),
+                laptop: currentPayment.name,
+                originalPrice: currentPayment.price,
+                discount: currentPayment.discount,
+                finalPrice: currentPayment.finalPrice,
+                paymentMethod: selectedPaymentMethod,
+                date: new Date().toLocaleString(),
+                status: 'Completed'
+            };
+
+            transactions.unshift(transaction);
+            updateTransactionTable();
+            closePayment();
+            alert('Payment Successful! 🎉');
+        }
+
+        function updateTransactionTable() {
+            const content = document.getElementById('transactionContent');
+            
+            if (transactions.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p style="font-size: 20px;">No transactions yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Laptop</th>
+                            <th>Original Price</th>
+                            <th>Discount</th>
+                            <th>Final Price</th>
+                            <th>Payment Method</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            transactions.forEach(t => {
+                tableHTML += `
+                    <tr>
+                        <td style="color: #c084fc; font-family: monospace;">#${t.id}</td>
+                        <td>${t.laptop}</td>
+                        <td style="color: #9ca3af;">₹${t.originalPrice.toLocaleString()}</td>
+                        <td style="color: #22c55e;">${t.discount}%</td>
+                        <td style="font-weight: bold;">₹${t.finalPrice.toLocaleString()}</td>
+                        <td style="color: #60a5fa; text-transform: capitalize;">${t.paymentMethod}</td>
+                        <td style="color: #9ca3af;">${t.date}</td>
+                        <td><span class="status-badge">✓ ${t.status}</span></td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            content.innerHTML = tableHTML;
+        }
+    </script>
+</body>
+</html>
