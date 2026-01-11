@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Handwritten OCR</title>
+
+<!-- Tesseract OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+:root{
+    --bg:#020617;
+    --card:#0f172a;
+    --text:#e5e7eb;
+    --accent:#22c55e;
+}
+.light{
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --text:#020617;
+}
+*{box-sizing:border-box}
+body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Segoe UI,system-ui;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+.container{
+    width:100%;
+    max-width:820px;
+    background:var(--card);
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+}
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.upload{
+    margin-top:20px;
+    padding:30px;
+    border:2px dashed #64748b;
+    border-radius:14px;
+    text-align:center;
+    cursor:pointer;
+}
+.upload input{display:none}
+select,button{
+    width:100%;
+    margin-top:14px;
+    padding:14px;
+    font-size:15px;
+    border-radius:10px;
+    border:none;
+}
+select{background:#1e293b;color:#fff}
+button{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    font-weight:bold;
+    cursor:pointer;
+}
+#loading{
+    display:none;
+    margin-top:12px;
+    text-align:center;
+}
+.progress{
+    height:6px;
+    background:#334155;
+    border-radius:10px;
+    overflow:hidden;
+}
+.progress div{
+    height:100%;
+    width:0%;
+    background:var(--accent);
+}
+textarea{
+    margin-top:18px;
+    width:100%;
+    height:280px;
+    padding:14px;
+    border-radius:12px;
+    background:#020617;
+    color:#d1fae5;
+    border:1px solid #334155;
+    resize:none;
+}
+.download{background:#2563eb}
+canvas{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="top">
+        <h2>📝 Advanced Handwritten OCR</h2>
+        <div style="cursor:pointer" onclick="toggleTheme()">🌗 Theme</div>
+    </div>
+
+    <label class="upload">
+        <input type="file" id="file" accept="image/*,.pdf">
+        <b>Click / Drop Image or PDF</b>
+    </label>
+
+    <select id="lang">
+        <option value="eng">English</option>
+        <option value="hin">Hindi</option>
+        <option value="spa">Spanish</option>
+        <option value="fra">French</option>
+    </select>
+
+    <select id="mode">
+        <option value="ocr">📝 OCR Only</option>
+        <option value="ai">🧠 AI Enhanced</option>
+    </select>
+
+    <button onclick="startOCR()">Extract Text</button>
+
+    <div id="loading">
+        Processing...
+        <div class="progress"><div id="bar"></div></div>
+    </div>
+
+    <textarea id="result" placeholder="Extracted text..."></textarea>
+    <button class="download" onclick="downloadText()">Download TXT</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const fileInput = document.getElementById("file");
+const result = document.getElementById("result");
+const loading = document.getElementById("loading");
+const bar = document.getElementById("bar");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function toggleTheme(){
+    document.body.classList.toggle("light");
+}
+
+/* ================= OCR ================= */
+
+async function startOCR(){
+    const file = fileInput.files[0];
+    if(!file){ alert("Upload a file first"); return; }
+
+    loading.style.display = "block";
+    bar.style.width = "0%";
+    result.value = "";
+
+    const lang = document.getElementById("lang").value;
+    const mode = document.getElementById("mode").value;
+
+    const worker = Tesseract.createWorker({
+        logger: m=>{
+            if(m.progress){
+                bar.style.width = Math.floor(m.progress*100) + "%";
+            }
+        }
+    });
+
+    await worker.load();
+    await worker.loadLanguage(lang);
+    await worker.initialize(lang);
+
+    await worker.setParameters({
+        tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+        tessedit_ocr_engine_mode: Tesseract.OEM.LSTM_ONLY,
+        preserve_interword_spaces: "1"
+    });
+
+    let text="", confidence=0;
+
+    if(file.type === "application/pdf"){
+        text = await readPDF(file, worker);
+    } else {
+        const img = await preprocess(file);
+        const data = await worker.recognize(img);
+        text = data.data.text;
+        confidence = Math.round(data.data.confidence);
+    }
+
+    text = cleanup(text);
+    result.value = (mode==="ai" ? aiEnhance(text) : text);
+
+    if(confidence){
+        result.value += `\n\n— OCR Confidence: ${confidence}%`;
+    }
+
+    await worker.terminate();
+    loading.style.display = "none";
+}
+
+/* ================= PDF ================= */
+
+async function readPDF(file, worker){
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:buffer}).promise;
+    let final = "";
+
+    for(let i=1;i<=pdf.numPages;i++){
+        loading.firstChild.textContent = `Processing page ${i}/${pdf.numPages}`;
+        const page = await pdf.getPage(i);
+        const vp = page.getViewport({scale:2});
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        await page.render({canvasContext:ctx,viewport:vp}).promise;
+        const data = await worker.recognize(canvas.toDataURL());
+        final += data.data.text + "\n\n";
+    }
+    return final;
+}
+
+/* ================= IMAGE PREPROCESS ================= */
+
+function preprocess(file){
+    return new Promise(res=>{
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = ()=>{
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0);
+            const d = ctx.getImageData(0,0,canvas.width,canvas.height);
+            for(let i=0;i<d.data.length;i+=4){
+                let g = d.data[i]*0.3 + d.data[i+1]*0.59 + d.data[i+2]*0.11;
+                let v = g > 140 ? 255 : 0;
+                d.data[i]=d.data[i+1]=d.data[i+2]=v;
+            }
+            ctx.putImageData(d,0,0);
+            res(canvas.toDataURL("image/png"));
+        };
+    });
+}
+
+/* ================= CLEANUP ================= */
+
+function cleanup(t){
+    return t.replace(/\s{2,}/g," ")
+            .replace(/\n{3,}/g,"\n\n")
+            .trim();
+}
+
+/* ================= AI ENHANCE ================= */
+
+function aiEnhance(t){
+    return t
+        .replace(/\brn\b/gi,"m")
+        .replace(/\bteh\b/gi,"the")
+        .replace(/\b0\b/g,"O")
+        .replace(/\b1\b/g,"I")
+        .replace(/([a-z])\n([A-Z])/g,"$1. $2")
+        .replace(/\s{2,}/g," ")
+        .replace(/\n{2,}/g,"\n")
+        .replace(/(^\w|[.!?]\s*\w)/g,c=>c.toUpperCase())
+        .trim();
+}
+
+/* ================= DOWNLOAD ================= */
+
+function downloadText(){
+    const blob = new Blob([result.value],{type:"text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "ocr-text.txt";
+    a.click();
+}
+</script>
+
+</body>
+</html>

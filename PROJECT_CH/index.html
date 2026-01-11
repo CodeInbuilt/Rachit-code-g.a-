@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Medical System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>Medical Login</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <!-- ROLE -->
+  <select id="role">
+    <option value="patient">Patient</option>
+    <option value="doctor">Doctor</option>
+  </select>
+
+  <button id="loginBtn">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+
+  <h1>Dashboard</h1>
+
+  <!-- ❤️ ECG -->
+  <canvas id="ecg" width="400" height="120"></canvas>
+  <p>❤️ BPM: <span id="bpm">72</span></p>
+
+  <!-- 🫁 Oxygen -->
+  <div class="spo2">
+    <svg width="120" height="120">
+      <circle cx="60" cy="60" r="50" class="bg"/>
+      <circle cx="60" cy="60" r="50" class="progress"/>
+    </svg>
+    <div id="spo2Text">98%</div>
+  </div>
+
+  <!-- ROLE CONTENT -->
+  <div id="doctorPanel">👨‍⚕️ Doctor: Patient Records, Coding</div>
+  <div id="patientPanel">🧑 Patient: My Reports</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

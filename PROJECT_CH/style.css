@@ -1,0 +1,74 @@
+body {
+  background: black;
+  color: #00ff66;
+  font-family: Arial;
+  text-align: center;
+}
+
+/* LOGIN */
+#loginBox {
+  width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  border: 2px solid #00ff66;
+  box-shadow: 0 0 20px #00ff66;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background: transparent;
+  border: 1px solid #00ff66;
+  color: #00ff66;
+}
+
+/* DASHBOARD */
+#dashboard {
+  display: none;
+  margin-top: 40px;
+}
+
+/* ECG */
+canvas {
+  border: 1px solid #00ff66;
+}
+
+/* OXYGEN */
+.spo2 {
+  position: relative;
+  width: 120px;
+  margin: 20px auto;
+}
+
+.bg {
+  fill: none;
+  stroke: #003300;
+  stroke-width: 10;
+}
+
+.progress {
+  fill: none;
+  stroke: #00ff66;
+  stroke-width: 10;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: 1s;
+}
+
+#spo2Text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ROLE PANELS */
+#doctorPanel, #patientPanel {
+  display: none;
+  border: 1px solid #00ff66;
+  padding: 15px;
+  margin: 15px;
+}
