@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table with Rowspan and Colspan</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #0d0d0d;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0,255,255,0.4);
+  }
+
+  caption {
+    caption-side: top;
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00e5ff;
+  }
+
+  th, td {
+    padding: 15px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,255,255,0.05);
+    transition: all 0.3s ease;
+  }
+
+  th {
+    background: linear-gradient(45deg, #ff4c4c, #ffb84c);
+    color: #0d0d0d;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff;
+  }
+
+  td:hover {
+    background: #00ffff;
+    color: #0d0d0d;
+    font-weight: bold;
+    box-shadow: 0 0 8px #00ffff;
+  }
+</style>
+</head>
+<body>
+
+<table>
+  <caption>Rowspan and Colspan Example</caption>
+  <tr>
+    <th rowspan="2">Name</th>
+    <th colspan="2">Subjects</th>
+    <th rowspan="2">Total</th>
+  </tr>
+  <tr>
+    <th>Math</th>
+    <th>Science</th>
+  </tr>
+  <tr>
+    <td>Rachit</td>
+    <td>95</td>
+    <td>88</td>
+    <td>183</td>
+  </tr>
+  <tr>
+    <td>Priya</td>
+    <td>85</td>
+    <td>90</td>
+    <td>175</td>
+  </tr>
+  <tr>
+    <td colspan="2">Average</td>
+    <td colspan="2">179</td>
+  </tr>
+</table>
+
+</body>
+</html>

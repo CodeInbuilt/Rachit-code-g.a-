@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Horizontal & Vertical Rules — Stylish Demo</title>
+<style>
+  :root{
+    --bg1:#0f1724;
+    --bg2:#071029;
+    --accent1:#6ef7ff;
+    --accent2:#b86bff;
+    --glass: rgba(255,255,255,0.06);
+  }
+
+  /* Page */
+  html,body{
+    height:100%;
+    margin:0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(circle at 10% 10%, #071026 0%, var(--bg1) 30%, var(--bg2) 100%);
+    color: #e6eef8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+    box-sizing:border-box;
+  }
+
+  .card {
+    width:100%;
+    max-width:1100px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius:16px;
+    padding:28px;
+    box-shadow: 0 10px 40px rgba(2,8,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    backdrop-filter: blur(6px);
+  }
+
+  h1 {
+    margin:0 0 14px 0;
+    font-size:1.6rem;
+    letter-spacing:0.4px;
+    color: #cfefff;
+    text-shadow: 0 4px 20px rgba(102,233,255,0.06);
+  }
+
+  p.lead{
+    margin:0 0 22px 0;
+    color:#bcdff7;
+    opacity:0.95;
+  }
+
+  /* Fancy horizontal rule */
+  .fancy-hr {
+    height:6px;
+    border:0;
+    border-radius:6px;
+    background: linear-gradient(90deg, rgba(110,247,255,0.0) 0%, rgba(110,247,255,0.9) 20%, rgba(184,107,255,0.9) 80%, rgba(184,107,255,0.0) 100%);
+    box-shadow: 0 6px 20px rgba(110,247,255,0.06), 0 0 30px rgba(184,107,255,0.06);
+    margin: 20px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  /* tiny moving glow inside hr */
+  .fancy-hr::after{
+    content:"";
+    position:absolute;
+    top:0; left:-30%;
+    width:30%;
+    height:100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+    transform: skewX(-15deg);
+    animation: slide 3.6s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes slide {
+    to { left:110%; }
+  }
+
+  /* Two-column area with vertical rule between columns */
+  .two-col {
+    display:flex;
+    gap:28px;
+    align-items:stretch;
+    margin-top:18px;
+  }
+
+  .col {
+    flex:1;
+    padding:20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+    border-radius:12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  }
+
+  .col h2 { margin:0 0 8px 0; font-size:1.05rem; color:#e6f9ff; }
+  .col p { margin:0; color:#c7e7ff; opacity:0.95; line-height:1.5; }
+
+  /* Vertical rule */
+  .vr {
+    width:6px;
+    border-radius:6px;
+    background: linear-gradient(180deg, rgba(110,247,255,0.0) 0%, rgba(110,247,255,0.9) 25%, rgba(184,107,255,0.9) 75%, rgba(184,107,255,0.0) 100%);
+    box-shadow: 0 0 24px rgba(110,247,255,0.06), 0 0 36px rgba(184,107,255,0.04);
+    align-self:center;
+    position:relative;
+    overflow:hidden;
+    transition:all .3s ease;
+  }
+
+  .vr::after{
+    content:"";
+    position:absolute;
+    top:-30%;
+    left:0;
+    width:100%;
+    height:30%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+    animation: slide-vert 3.6s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes slide-vert {
+    to { top:130%; }
+  }
+
+  /* Make vertical rule responsive: on narrow screens it becomes a horizontal rule */
+  @media (max-width:820px){
+    .two-col { flex-direction:column; }
+    .vr {
+      width:100%;
+      height:6px;
+      margin:12px 0;
+      border-radius:6px;
+    }
+    .vr::after{ left:-30%; top:0; width:30%; height:100%; animation: slide 3.6s linear infinite; }
+  }
+
+  /* small helpers */
+  .muted { color:#98b6d8; font-size:0.95rem; margin-top:10px; }
+  .example-note { margin-top:16px; font-size:0.95rem; color:#b6d7ff; opacity:0.9; }
+
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Separators: Horizontal & Vertical Rules (stylish)</h1>
+    <p class="lead">This demo shows a fancy horizontal rule and a vertical rule used to separate content areas. Resize the window to see the vertical rule flip to a horizontal bar on small screens.</p>
+
+    <!-- Horizontal rule example -->
+    <p class="example-note">Horizontal separator (use <code>&lt;hr&gt;</code>)</p>
+    <hr class="fancy-hr">
+
+    <!-- Two-column layout with a vertical rule between columns -->
+    <div class="two-col" role="group" aria-label="two column example">
+      <div class="col">
+        <h2>Section A</h2>
+        <p>
+          Content for the left column — useful for an intro, summary, or navigation.
+          Use a vertical rule to give a clear visual separation when laying out side-by-side content.
+        </p>
+      </div>
+
+      <!-- Vertical rule (styled div) -->
+      <div class="vr" aria-hidden="true"></div>
+
+      <div class="col">
+        <h2>Section B</h2>
+        <p>
+          Content for the right column — detail, form, or additional information. On mobile the vertical rule becomes
+          a horizontal divider so the layout remains readable and accessible.
+        </p>
+      </div>
+    </div>
+
+    <p class="muted">Tip: use an actual &lt;hr&gt; for semantic horizontal rules. For vertical separators, a styled &lt;div&gt; or CSS pseudo-element is common.</p>
+  </div>
+</body>
+</html>

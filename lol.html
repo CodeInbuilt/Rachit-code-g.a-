@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table with Cell Spacing and Padding</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #0d0d0d;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+  }
+
+  table {
+    border-collapse: separate; /* Important for cellspacing effect */
+    border-spacing: 15px 10px; /* Horizontal and vertical spacing */
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0,255,255,0.4);
+  }
+
+  caption {
+    caption-side: top;
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00e5ff;
+  }
+
+  th, td {
+    padding: 20px; /* Cell padding */
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,255,255,0.05);
+    transition: all 0.3s ease;
+  }
+
+  th {
+    background: linear-gradient(45deg, #ff4c4c, #ffb84c);
+    color: #0d0d0d;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff;
+  }
+
+  td:hover {
+    background: #00ffff;
+    color: #0d0d0d;
+    font-weight: bold;
+    box-shadow: 0 0 8px #00ffff;
+  }
+</style>
+</head>
+<body>
+
+<table>
+  <caption>Product Table with Cell Spacing & Padding</caption>
+  <tr>
+    <th>Product</th>
+    <th>Quantity</th>
+    <th>Price (₹)</th>
+  </tr>
+  <tr>
+    <td>Apple</td>
+    <td>1 kg</td>
+    <td>150</td>
+  </tr>
+  <tr>
+    <td>Banana</td>
+    <td>1 dozen</td>
+    <td>60</td>
+  </tr>
+  <tr>
+    <td>Rice</td>
+    <td>5 kg</td>
+    <td>250</td>
+  </tr>
+  <tr>
+    <td>Milk</td>
+    <td>2 liters</td>
+    <td>50</td>
+  </tr>
+</table>
+
+</body>
+</html>
