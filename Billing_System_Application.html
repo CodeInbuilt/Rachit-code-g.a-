@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://vishu1524.github.io/Billing_System_Application/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Billing_System_Application</title>
+    <!-- For Bootstrap-->
+    <link href="./Billing_System_Application_files/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery CDN -->
+    <script src="./Billing_System_Application_files/jquery-3.6.2.slim.js.download"></script>
+
+    <!--For Css-->
+    <link rel="stylesheet" href="./Billing_System_Application_files/style.css">
+
+
+</head>
+
+<body>
+    <div class="d-flex justify-content-between ">
+     <!-- Logo -->
+    
+     <img src="logobilling.png" alt="Your Logo" class="img-fluid" style="height: 55px; width: 70px;">
+
+    <!-- Protofolio Link -->
+    <h1>Billing System Application</h1>
+   
+    <a href="https://vishu1524.github.io/Billing_System_Application/your_protofolio_link_here" target="_blank">About Developer</a>
+    </div>
+
+    <div class="container ">
+
+
+        <div class="card">
+            <div class="card-body ">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">Customer Name</span>
+                            <input type="text" class="form-control" placeholder="Customer Name">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">Address</span>
+                            <input type="text" class="form-control " placeholder="Address">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">City</span>
+                            <input type="text" class="form-control" placeholder="City">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">Bill. No</span>
+                            <input type="text" class="form-control" placeholder="Bill. No">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">Bill. Date</span>
+                            <input type="date" class="form-control" placeholder="Bill. Date">
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-success">
+
+                        <tr>
+                            <th scope="col">S.No.</th>
+                            <th scope="col" class="text-center">Product Name</th>
+                            <th scope="col" class="text-center">Qty</th>
+                            <th scope="col" class="text-center">Rate</th>
+                            <th scope="col" class="text-center">Amount</th>
+                            <th scope="col" class="NoPrint">
+                                <button type="button" class="btn btn-sm btn-warning" onclick="BtnAdd()">Add</button>
+
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="TBody">
+                        <tr id="TRow" class="d-none">
+                            <th scope="row" class="color text-center">1.</th>
+                            <td><input type="text" class="form-control text-center"></td>
+                            <td><input type="number" class="form-control text-center" name="qty" onchange="Calc(this);">
+                            </td>
+                            <td><input type="number" class="form-control text-center" name="rate" onchange="Calc(this);">
+                            </td>
+                            <td><input type="number" class="form-control text-center" name="amt" value="0" disabled="">
+                            </td>
+                            <td class="NoPrint"><button type="button" class="btn btn-sm btn-danger" onclick="BtnDel(this)">Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+
+                        <button type="button" class="btn btn-success" onclick="GetPrint()">Print</button>
+
+                        <button type="button" class="btn btn-danger reset" onclick="clearInputs()">All Clear</button>
+
+                    </div>
+
+                    <div class="col-md-4 ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">Total</span>
+                            <input type="number" class="form-control text-end" id="FTotal" name="FTotal" disabled="">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">GST</span>
+                            <input type="number" class="form-control text-end" id="FGST" name="FGST" onchange="GetTotal()" placeholder="%">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text dark">Net Amt</span>
+                            <input type="number" class="form-control text-end " id="FNet" name="FNet" disabled="">
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- For Invoice  -->
+    <script src="./Billing_System_Application_files/bill.js.download"></script>
+
+
+
+
+
+
+</body></html>
