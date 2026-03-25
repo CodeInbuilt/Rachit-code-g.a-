@@ -1,0 +1,50 @@
+-- function for addition
+function add(a, b)
+    return a + b
+end
+
+-- function for subtraction
+function subtract(a, b)
+    return a - b
+end
+
+-- function for multiplication
+function multiply(a, b)
+    return a * b
+end
+
+-- function for division
+function divide(a, b)
+    if b == 0 then
+        return "Error: Division by zero!"
+    else
+        return a / b
+    end
+end
+
+-- user input
+print("Enter first number:")
+num1 = tonumber(io.read())
+
+print("Enter operator (+, -, *, /):")
+op = io.read()
+
+print("Enter second number:")
+num2 = tonumber(io.read())
+
+-- conditional logic
+if op == "+" then
+    print("Result:", add(num1, num2))
+
+elseif op == "-" then
+    print("Result:", subtract(num1, num2))
+
+elseif op == "*" then
+    print("Result:", multiply(num1, num2))
+
+elseif op == "/" then
+    print("Result:", divide(num1, num2))
+
+else
+    print("Invalid operator!")
+end
